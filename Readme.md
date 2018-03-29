@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Tatiana Kotova](https://up.htmlacademy.ru/javascript/13/user/137881).
-* Наставник: `Неизвестно`.
+* Наставник: [Павел Скрипкин](https://up.htmlacademy.ru/javascript/13/user/604273).
 
 ---
 
