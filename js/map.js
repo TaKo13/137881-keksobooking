@@ -10,13 +10,26 @@ var TITLES = [
   'Уютное бунгало далеко от моря',
   'Неуютное бунгало по колено в воде'
 ];
-var TIMES = ['12:00', '13:00', '14:00'];
+var TIMES_IN = ['12:00', '13:00', '14:00'];
+var TIMES_OUT = ['12:00', '13:00', '14:00'];
 var TYPES = ['palace', 'flat', 'house', 'bungalo'];
 var TYPES_DICT = {
   palace: 'Дворец',
   flat: 'Квартира',
   house: 'Дом',
   bungalo: 'Бунгало'
+};
+var TYPES_MIN_PRICES = {
+  palace: 10000,
+  flat: 1000,
+  house: 5000,
+  bungalo: 0
+};
+var ROOMS_TO_CAPACITY = {
+  "1": [0, 1, 3],
+  "2": [0, 3],
+  "3": [3],
+  "100": [0, 1, 2]
 };
 var FEATURES = [
   'wifi',
@@ -69,8 +82,8 @@ var generateData = function () {
         type: getRandomItemFromArray(TYPES),
         rooms: getRandomNumber(1, 5),
         guests: getRandomNumber(1, 5),
-        checkin: getRandomItemFromArray(TIMES),
-        checkout: getRandomItemFromArray(TIMES),
+        checkin: getRandomItemFromArray(TIMES_IN),
+        checkout: getRandomItemFromArray(TIMES_OUT),
         features: getShuffledCopyWithRandomLength(FEATURES),
         description: '',
         photos: getShuffledArrayCopy(PHOTOS)
@@ -232,6 +245,53 @@ var getPinPosition = function (pin) {
 var fillInputCoordinates = function (input, coordinates) {
   input.value = coordinates.x + ', ' + coordinates.y;
 };
+
+var adForm = document.querySelector('.ad-form');
+var housingTypeSelect = adForm.elements.namedItem('type');
+var housingPriceInput = adForm.elements.namedItem('price');
+var timeInInpun = adForm.elements.namedItem('timein');
+var timeOutInpun = adForm.elements.namedItem('timeout');
+var roomsSelect = adForm.elements.namedItem('rooms');
+var capacitySelect = adForm.elements.namedItem('capacity');
+
+// Поле «Кол-во комнат» синхронизировано с полем «Кол-во мест»
+var onRoomSelectChange = function (e) {
+  var roomsNumber = e.target.value;
+  var indexesToDisable = ROOMS_TO_CAPACITY[roomsNumber];
+
+  for (var i = 0; i < capacitySelect.length; i++) {
+    capacitySelect.options[i].disabled = false;
+
+    if (indexesToDisable.includes(i)) {
+      capacitySelect.options[i].disabled = true;
+    }
+  }
+};
+
+roomsSelect.addEventListener('change', onRoomSelectChange);
+
+// Меняем значение плейсхолдера и мин.цены
+var changePriceInput = function (price) {
+  housingPriceInput.setAttribute('placeholder', price);
+  housingPriceInput.setAttribute('min', price);
+}
+
+var onHousingTypeChange = function (e) {
+  changePriceInput(TYPES_MIN_PRICES[e.target.value]);
+}
+
+housingTypeSelect.addEventListener('change', onHousingTypeChange);
+
+// Синхронизируем время заезда/выезда
+var onTimeInChange = function (e) {
+  timeOutInpun.value = e.target.value
+};
+var onTimeOutChange = function (e) {
+  timeInInpun.value = e.target.value
+};
+
+timeInInpun.addEventListener('change', onTimeInChange);
+timeOutInpun.addEventListener('change', onTimeOutChange);
 
 var start = function () {
   var objects = generateData();
