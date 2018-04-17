@@ -26,10 +26,10 @@ var TYPES_MIN_PRICES = {
   bungalo: 0
 };
 var ROOMS_TO_CAPACITY = {
-  "1": [0, 1, 3],
-  "2": [0, 3],
-  "3": [3],
-  "100": [0, 1, 2]
+  '1': [0, 1, 3],
+  '2': [0, 3],
+  '3': [3],
+  '100': [0, 1, 2]
 };
 var FEATURES = [
   'wifi',
@@ -44,28 +44,30 @@ var PHOTOS = [
   'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
 ];
+var PIN_MIN_Y_VALUE = 150;
+var PIN_MAX_Y_VALUE = 500;
 
-var getRandomNumber = function (min, max) {
+var getRandomNumber = function(min, max) {
   return Math.round(Math.random() * (max - min) + min);
 };
 
-var getRandomItemFromArray = function (array) {
+var getRandomItemFromArray = function(array) {
   var index = Math.floor(Math.random() * array.length);
   return array[index];
 };
 
-var getShuffledCopyWithRandomLength = function (array) {
+var getShuffledCopyWithRandomLength = function(array) {
   return getShuffledArrayCopy(array).slice(0, getRandomNumber(1, array.length));
 };
 
-var getShuffledArrayCopy = function (array) {
-  var compareRandom = function (a, b) {
+var getShuffledArrayCopy = function(array) {
+  var compareRandom = function(a, b) {
     return Math.random() - 0.5;
   };
   return array.slice().sort(compareRandom);
 };
 
-var generateData = function () {
+var generateData = function() {
   var objects = [];
 
   for (var i = 1; i <= 8; i++) {
@@ -101,7 +103,7 @@ var generateData = function () {
 var mapCardTemplate = document.querySelector('template');
 
 // Создается элемент метки
-var createMapPin = function (locationX, locationY, avatar, title) {
+var createMapPin = function(locationX, locationY, avatar, title) {
   var mapPinElement = mapCardTemplate.content
     .querySelector('.map__pin')
     .cloneNode(true);
@@ -115,8 +117,7 @@ var createMapPin = function (locationX, locationY, avatar, title) {
 };
 
 // Здесь заполняются метки 📍
-var insertMapPinElements = function (objects) {
-
+var insertMapPinElements = function(objects) {
   for (var j = 0; j < objects.length; j++) {
     var fragment = document.createDocumentFragment();
 
@@ -133,7 +134,7 @@ var insertMapPinElements = function (objects) {
   }
 };
 
-var createPhotos = function (photos, photosContainer) {
+var createPhotos = function(photos, photosContainer) {
   var img = photosContainer.querySelector('.popup__photo');
 
   for (var i = 0; i < photos.length; i++) {
@@ -145,7 +146,7 @@ var createPhotos = function (photos, photosContainer) {
   photosContainer.removeChild(img);
 };
 
-var createFeatures = function (features, featuresContainer) {
+var createFeatures = function(features, featuresContainer) {
   var feature = featuresContainer.querySelector('.popup__feature');
 
   feature.classList.remove('popup__feature--wifi');
@@ -161,7 +162,7 @@ var createFeatures = function (features, featuresContainer) {
 };
 
 // Создаются карточки , далее циклом заполнить
-var createMapCard = function (object) {
+var createMapCard = function(object) {
   var mapCardElement = mapCardTemplate.content
     .querySelector('.map__card')
     .cloneNode(true);
@@ -200,7 +201,7 @@ var createMapCard = function (object) {
 };
 
 // Заполняются карточки, вставка на страницу в блок map
-var insertCardElements = function (objects) {
+var insertCardElements = function(objects) {
   for (var k = 0; k < objects.length; k++) {
     var fragment = document.createDocumentFragment();
     var map = document.querySelector('.map');
@@ -211,30 +212,64 @@ var insertCardElements = function (objects) {
   }
 };
 
+var objects = generateData();
+insertCardElements(objects);
+insertMapPinElements(objects);
+
 var fieldset = document.querySelectorAll('fieldset');
+var inputAddress = document.querySelector('#address');
+var mapPinMainElement = document.querySelector('.map__pin--main');
+var mapPinElements = document.querySelectorAll('.map__pin');
+var mapCardElements = document.querySelectorAll('.map__card');
+var mapPinsContainer = document.querySelector('.map__pins');
+
+var hideAllMapCards = function() {
+  for (var i = 0; i < mapCardElements.length; i++) {
+    mapCardElements[i].classList.add('hidden');
+  }
+};
+
+// расположить элемент по центру
+var moveMainPinToCenter = function() {
+  mapPinMainElement.style.left =
+    mapPinsContainer.clientWidth / 2 - mapPinMainElement.clientWidth / 2 + 'px';
+  mapPinMainElement.style.top =
+    mapPinsContainer.clientHeight / 2 - mapPinMainElement.clientHeight + 'px';
+};
 
 // Форма заблокирована от редактирования
-var deactivateFormInputs = function () {
+var deactivateForm = function() {
   document.querySelector('.ad-form').classList.add('ad-form--disabled');
   document.querySelector('.map').classList.add('map--faded');
   for (var i = 0; i < fieldset.length; i++) {
     fieldset[i].setAttribute('disabled', '');
   }
-}
+  for (var i = 1; i < mapPinElements.length; i++) {
+    mapPinElements[i].classList.add('hidden');
+  }
+  hideAllMapCards();
+  moveMainPinToCenter();
+  fillInputCoordinates(inputAddress, getPinPosition(mapPinMainElement));
+};
 
 // Активировать форму
-var activateFormInputs = function () {
+var activateForm = function() {
   document.querySelector('.ad-form').classList.remove('ad-form--disabled');
   document.querySelector('.map').classList.remove('map--faded');
+
   for (var i = 0; i < fieldset.length; i++) {
     fieldset[i].removeAttribute('disabled');
+  }
+
+  for (var i = 1; i < mapPinElements.length; i++) {
+    mapPinElements[i].classList.remove('hidden');
   }
 };
 
 // Координаты положения метки
-var getPinPosition = function (pin) {
-  var x = Math.floor(parseInt(pin.style.left, 10) + pin.clientHeight);
-  var y = Math.floor(parseInt(pin.style.top, 10) + pin.clientWidth / 2);
+var getPinPosition = function(pin) {
+  var x = Math.floor(parseInt(pin.style.left, 10) + pin.clientWidth / 2);
+  var y = Math.floor(parseInt(pin.style.top, 10) + pin.clientHeight);
 
   return {
     x: x,
@@ -242,7 +277,7 @@ var getPinPosition = function (pin) {
   };
 };
 
-var fillInputCoordinates = function (input, coordinates) {
+var fillInputCoordinates = function(input, coordinates) {
   input.value = coordinates.x + ', ' + coordinates.y;
 };
 
@@ -254,8 +289,15 @@ var timeOutInpun = adForm.elements.namedItem('timeout');
 var roomsSelect = adForm.elements.namedItem('rooms');
 var capacitySelect = adForm.elements.namedItem('capacity');
 
+var onAdFormReset = function(e) {
+  e.preventDefault();
+  deactivateForm();
+};
+
+adForm.addEventListener('reset', onAdFormReset);
+
 // Поле «Кол-во комнат» синхронизировано с полем «Кол-во мест»
-var onRoomSelectChange = function (e) {
+var onRoomSelectChange = function(e) {
   var roomsNumber = e.target.value;
   var indexesToDisable = ROOMS_TO_CAPACITY[roomsNumber];
 
@@ -271,84 +313,119 @@ var onRoomSelectChange = function (e) {
 roomsSelect.addEventListener('change', onRoomSelectChange);
 
 // Меняем значение плейсхолдера и мин.цены
-var changePriceInput = function (price) {
+var changePriceInput = function(price) {
   housingPriceInput.setAttribute('placeholder', price);
   housingPriceInput.setAttribute('min', price);
-}
+};
 
-var onHousingTypeChange = function (e) {
+var onHousingTypeChange = function(e) {
   changePriceInput(TYPES_MIN_PRICES[e.target.value]);
-}
+};
 
 housingTypeSelect.addEventListener('change', onHousingTypeChange);
 
 // Синхронизируем время заезда/выезда
-var onTimeInChange = function (e) {
-  timeOutInpun.value = e.target.value
+var onTimeInChange = function(e) {
+  timeOutInpun.value = e.target.value;
 };
-var onTimeOutChange = function (e) {
-  timeInInpun.value = e.target.value
+var onTimeOutChange = function(e) {
+  timeInInpun.value = e.target.value;
 };
 
 timeInInpun.addEventListener('change', onTimeInChange);
 timeOutInpun.addEventListener('change', onTimeOutChange);
 
-var start = function () {
-  var objects = generateData();
-  insertCardElements(objects);
-  insertMapPinElements(objects);
-  deactivateFormInputs();
+var start = function() {
+  deactivateForm();
 
-  var inputAddress = document.querySelector('#address');
-  var mapPinMainElement = document.querySelector('.map__pin--main');
-  var mapPinElements = document.querySelectorAll('.map__pin');
-  var mapCardElements = document.querySelectorAll('.map__card');
+  var onMainPinMousedown = function(e) {
+    e.preventDefault();
 
-  var onMainPinMouseup = function () {
-    activateFormInputs();
+    var startCoords = {
+      x: e.clientX,
+      y: e.clientY
+    };
 
-    for (var i = 0; i < mapPinElements.length; i++) {
-      mapPinElements[i].classList.remove('hidden');
-    }
+    var onMainPinMousemove = function(mvE) {
+      mvE.preventDefault();
 
-    mapPinMainElement.removeEventListener('mouseup', onMainPinMouseup);
+      var shift = {
+        x: startCoords.x - mvE.clientX,
+        y: startCoords.y - mvE.clientY
+      };
+
+      startCoords = {
+        x: mvE.clientX,
+        y: mvE.clientY
+      };
+
+      var pinTipCoordinates = {
+        x: getPinPosition(mapPinMainElement).x,
+        y: getPinPosition(mapPinMainElement).y
+      };
+
+      var pinFinalCoords = {
+        x: mapPinMainElement.offsetLeft - shift.x,
+        y: mapPinMainElement.offsetTop - shift.y
+      };
+
+      if (
+        pinFinalCoords.y <= PIN_MIN_Y_VALUE - mapPinMainElement.clientHeight ||
+        pinFinalCoords.y >= PIN_MAX_Y_VALUE - mapPinMainElement.clientHeight ||
+        pinFinalCoords.x <=
+          mapPinsContainer.offsetLeft - mapPinMainElement.clientWidth / 2 ||
+        pinFinalCoords.x >=
+          mapPinsContainer.offsetLeft +
+            mapPinsContainer.clientWidth -
+            mapPinMainElement.clientWidth / 2
+      ) {
+        mapPinMainElement.dispatchEvent(new Event('mouseup'));
+        return;
+      }
+
+      mapPinMainElement.style.left = pinFinalCoords.x + 'px';
+      mapPinMainElement.style.top = pinFinalCoords.y + 'px';
+
+      fillInputCoordinates(inputAddress, pinTipCoordinates);
+    };
+
+    var onMainPinMouseup = function(upE) {
+      upE.preventDefault();
+      activateForm();
+
+      mapPinMainElement.removeEventListener('mouseup', onMainPinMouseup);
+      mapPinMainElement.removeEventListener('mousemove', onMainPinMousemove);
+    };
+
+    mapPinMainElement.addEventListener('mouseup', onMainPinMouseup);
+    mapPinMainElement.addEventListener('mousemove', onMainPinMousemove);
   };
 
-  fillInputCoordinates(inputAddress, getPinPosition(mapPinMainElement));
+  mapPinMainElement.addEventListener('mousedown', onMainPinMousedown);
 
-  mapPinMainElement.addEventListener('mouseup', onMainPinMouseup);
-
-  var onMapCardClick = function (e) {
+  var onMapCardClick = function(e) {
     if (e.target.classList.contains('popup__close')) {
       e.target.parentElement.classList.add('hidden');
     }
-  }
+  };
 
-  var showCard = function (i) {
+  var showCard = function(i) {
     mapCardElements[i].classList.remove('hidden');
-  }
-
-  var hideAllMapCards = function () {
-    for (var i = 0; i < mapCardElements.length; i++) {
-      mapCardElements[i].classList.add('hidden');
-    }
-  }
-
+  };
 
   // 0 - главная метка
   for (var j = 1; j < mapPinElements.length; j++) {
-    (function (index) {
-      mapPinElements[j].addEventListener('click', function () {
+    (function(index) {
+      mapPinElements[j].addEventListener('click', function() {
         hideAllMapCards();
         showCard(index);
-      })
-    })(j - 1)
+      });
+    })(j - 1);
   }
 
   for (var k = 0; k < mapCardElements.length; k++) {
     mapCardElements[k].addEventListener('click', onMapCardClick);
   }
-
 };
 
 start();
