@@ -409,11 +409,11 @@ var start = function () {
       activateForm();
 
       document.removeEventListener('mouseup', onMainPinMouseup);
-      mapPinMainElement.removeEventListener('mousemove', onMainPinMousemove);
+      document.removeEventListener('mousemove', onMainPinMousemove);
     };
 
     document.addEventListener('mouseup', onMainPinMouseup);
-    mapPinMainElement.addEventListener('mousemove', onMainPinMousemove);
+    document.addEventListener('mousemove', onMainPinMousemove);
   };
 
   mapPinMainElement.addEventListener('mousedown', onMainPinMousedown);
