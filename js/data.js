@@ -11,8 +11,7 @@
     'Уютное бунгало далеко от моря',
     'Неуютное бунгало по колено в воде'
   ];
-  var TIMES_IN = ['12:00', '13:00', '14:00'];
-  var TIMES_OUT = ['12:00', '13:00', '14:00'];
+  var TIMES = ['12:00', '13:00', '14:00'];
   var TYPES = ['palace', 'flat', 'house', 'bungalo'];
 
   var TYPES_MIN_PRICES = {
@@ -76,8 +75,8 @@
           type: getRandomItemFromArray(TYPES),
           rooms: getRandomNumber(1, 5),
           guests: getRandomNumber(1, 5),
-          checkin: getRandomItemFromArray(TIMES_IN),
-          checkout: getRandomItemFromArray(TIMES_OUT),
+          checkin: getRandomItemFromArray(TIMES),
+          checkout: getRandomItemFromArray(TIMES),
           features: getShuffledCopyWithRandomLength(FEATURES),
           description: '',
           photos: getShuffledArrayCopy(PHOTOS)
