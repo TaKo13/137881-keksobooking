@@ -13,14 +13,6 @@
   ];
   var TIMES = ['12:00', '13:00', '14:00'];
   var TYPES = ['palace', 'flat', 'house', 'bungalo'];
-
-  var TYPES_MIN_PRICES = {
-    palace: 10000,
-    flat: 1000,
-    house: 5000,
-    bungalo: 0
-  };
-
   var FEATURES = [
     'wifi',
     'dishwasher',
