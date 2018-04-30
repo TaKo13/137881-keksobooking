@@ -32,6 +32,16 @@
   var mapCardElements;
   var mapPinElements;
 
+  var removeMapCards = function() {
+    if (!mapCardElements) {
+      return;
+    }
+
+    for (var i = 0; i < mapCardElements.length; i++) {
+      mapCardElements[i].remove();
+    }
+  };
+
   var hideAllMapCards = function() {
     if (!mapCardElements) {
       return;
@@ -52,17 +62,20 @@
     }
   };
 
-  var hidePins = function() {
+  var removePins = function() {
     if (!mapPinElements) {
       return;
     }
 
     for (var i = 1; i < mapPinElements.length; i++) {
-      mapPinElements[i].classList.add('hidden');
+      mapPinElements[i].remove();
     }
   };
 
+  var isActive = false;
+
   var activate = function() {
+    isActive = true;
     document.querySelector('.map').classList.remove('map--faded');
     window.enableForm();
 
@@ -70,12 +83,13 @@
   };
 
   window.deactivate = function() {
+    isActive = false;
     document.querySelector('.map').classList.add('map--faded');
     window.disableForm();
 
     moveMainPinToCenter();
-    hidePins();
-    hideAllMapCards();
+    removePins();
+    removeMapCards();
     window.fillInputCoordinates(getPinPosition(mapPinMainElement));
   };
 
@@ -150,7 +164,9 @@
 
       var onMainPinMouseup = function(upE) {
         upE.preventDefault();
-        activate();
+        if (!isActive) {
+          activate();
+        }
 
         document.removeEventListener('mouseup', onMainPinMouseup);
         document.removeEventListener('mousemove', onMainPinMousemove);
