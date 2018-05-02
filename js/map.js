@@ -82,7 +82,7 @@
     window.getData(onGetDataSuccess, onGetDataError);
   };
 
-  window.deactivate = function() {
+  var deactivate = function() {
     isActive = false;
     document.querySelector('.map').classList.add('map--faded');
     window.disableForm();
@@ -94,7 +94,7 @@
   };
 
   var start = function() {
-    window.deactivate();
+    deactivate();
 
     var onMainPinMousedown = function(e) {
       e.preventDefault();
@@ -235,4 +235,5 @@
     }
   };
   start();
+  window.deactivate = deactivate;
 })();

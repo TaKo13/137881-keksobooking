@@ -26,10 +26,6 @@
   var submitButton = adForm.querySelector('.ad-form__submit');
   var resetButton = adForm.querySelector('.ad-form__reset');
 
-  window.fillInputCoordinates = function(coordinates) {
-    inputAddress.value = coordinates.x + ', ' + coordinates.y;
-  };
-
   var onResetClick = function(e) {
     e.preventDefault();
 
@@ -95,6 +91,15 @@
 
   housingTypeSelect.addEventListener('change', onHousingTypeChange);
 
+  timeInInpun.addEventListener('change', onTimeInChange);
+  timeOutInpun.addEventListener('change', onTimeOutChange);
+  adForm.addEventListener('submit', onFormSubmit);
+  resetButton.addEventListener('click', onResetClick);
+
+  window.fillInputCoordinates = function(coordinates) {
+    inputAddress.value = coordinates.x + ', ' + coordinates.y;
+  };
+
   window.disableForm = function() {
     adForm.classList.add('ad-form--disabled');
 
@@ -110,9 +115,4 @@
       fieldsets[i].removeAttribute('disabled');
     }
   };
-
-  timeInInpun.addEventListener('change', onTimeInChange);
-  timeOutInpun.addEventListener('change', onTimeOutChange);
-  adForm.addEventListener('submit', onFormSubmit);
-  resetButton.addEventListener('click', onResetClick);
 })();
