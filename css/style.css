@@ -1209,3 +1209,30 @@ fieldset {
   -ms-transform: translateX(-50%);
   transform: translateX(-50%);
 }
+
+.error-popup {
+  min-height: 100px;
+  min-width: 400px;
+  position: fixed;
+  top: 75px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #fff;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: column;
+  padding: 15px;
+}
+
+.error-fade {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 2;
+  cursor: pointer;
+}

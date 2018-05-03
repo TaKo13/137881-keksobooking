@@ -1,6 +1,13 @@
 'use strist';
 
 (function() {
+  var TYPES_DICT = {
+    palace: 'Дворец',
+    flat: 'Квартира',
+    house: 'Дом',
+    bungalo: 'Бунгало'
+  };
+
   var template = document.querySelector('template');
 
   var createFeatures = function(features, featuresContainer) {
