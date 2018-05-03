@@ -31,7 +31,7 @@
   var activate = function() {
     isMapActive = true;
     document.querySelector('.map').classList.remove('map--faded');
-    window.enableForm();
+    window.form.enableForm();
 
     window.getData(onGetDataSuccess, onGetDataError);
   };
@@ -39,12 +39,12 @@
   var deactivate = function() {
     isMapActive = false;
     document.querySelector('.map').classList.add('map--faded');
-    window.disableForm();
+    window.form.disableForm();
 
     moveMainPinToCenter();
-    window.removePins();
+    window.pin.removePins();
     window.card.removeMapCards();
-    window.fillInputCoordinates(getPinPosition(mapPinMainElement));
+    window.form.fillInputCoordinates(getPinPosition(mapPinMainElement));
   };
 
   var start = function() {
@@ -113,7 +113,7 @@
           y: getPinPosition(mapPinMainElement).y
         };
 
-        window.fillInputCoordinates(pinTipCoordinates);
+        window.form.fillInputCoordinates(pinTipCoordinates);
       };
 
       var onMainPinMouseup = function(upE) {
@@ -139,8 +139,11 @@
 
   var onGetDataSuccess = function(response) {
     window.data = response;
-    window.render(window.filterData(response));
+    window.filter.render(window.filter.filterData(response));
   };
   start();
-  window.deactivate = deactivate;
+
+  window.map = {
+    deactivate: deactivate
+  };
 })();

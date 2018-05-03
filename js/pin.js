@@ -27,9 +27,7 @@
     }
   };
 
-  window.removePins = removePins;
-
-  window.insertMapPinElements = function(objects) {
+  var insertMapPinElements = function(objects) {
     removePins();
 
     for (var j = 0; j < objects.length; j++) {
@@ -62,5 +60,10 @@
         });
       })(j - 1);
     }
+  };
+
+  window.pin = {
+    removePins: removePins,
+    insertMapPinElements: insertMapPinElements
   };
 })();

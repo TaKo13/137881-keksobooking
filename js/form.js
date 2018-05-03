@@ -30,7 +30,7 @@
     e.preventDefault();
 
     adForm.reset();
-    window.deactivate();
+    window.map.deactivate();
   };
 
   // Поле «Кол-во комнат» синхронизировано с полем «Кол-во мест»
@@ -75,7 +75,7 @@
     }, 2000);
 
     adForm.reset();
-    window.deactivate();
+    window.map.deactivate();
   };
 
   var onErrorSubmit = function(errorMessage) {
@@ -96,11 +96,11 @@
   adForm.addEventListener('submit', onFormSubmit);
   resetButton.addEventListener('click', onResetClick);
 
-  window.fillInputCoordinates = function(coordinates) {
+  var fillInputCoordinates = function(coordinates) {
     inputAddress.value = coordinates.x + ', ' + coordinates.y;
   };
 
-  window.disableForm = function() {
+  var disableForm = function() {
     adForm.classList.add('ad-form--disabled');
 
     for (var i = 0; i < fieldsets.length; i++) {
@@ -108,11 +108,16 @@
     }
   };
 
-  window.enableForm = function() {
+  var enableForm = function() {
     adForm.classList.remove('ad-form--disabled');
 
     for (var i = 0; i < fieldsets.length; i++) {
       fieldsets[i].removeAttribute('disabled');
     }
+  };
+  window.form = {
+    fillInputCoordinates: fillInputCoordinates,
+    enableForm: enableForm,
+    disableForm: disableForm
   };
 })();
