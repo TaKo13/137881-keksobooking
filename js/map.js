@@ -139,7 +139,7 @@
 
   var onGetDataSuccess = function(response) {
     window.data = response;
-    window.filter.render(window.filter.filterData(response));
+    window.filter.render();
   };
   start();
 

@@ -13,6 +13,26 @@
 
   var template = document.querySelector('template');
 
+  var getPluralForm = function(number, one, two, five) {
+    var n = Math.abs(number) % 100;
+
+    if (n >= 5 && n <= 20) {
+      return five;
+    }
+
+    n %= 10;
+
+    if (n === 1) {
+      return one;
+    }
+
+    if (n >= 2 && n <= 4) {
+      return two;
+    }
+
+    return five;
+  };
+
   var createFeatures = function(features, featuresContainer) {
     var feature = featuresContainer.querySelector('.popup__feature');
 
@@ -52,6 +72,15 @@
     mapCardElement.querySelector('.popup__text--address').textContent =
       object.offer.address;
 
+    mapCardElement.querySelector('.popup__text--capacity').textContent =
+      object.offer.rooms +
+      ' ' +
+      getPluralForm(object.offer.rooms, 'комната', 'команты', 'команат') +
+      ' для ' +
+      object.offer.guests +
+      ' ' +
+      getPluralForm(object.offer.guests, 'гостя', 'гостей', 'гостей');
+
     mapCardElement.querySelector('.popup__text--price').textContent =
       object.offer.price + ' ₽/ночь';
 
@@ -59,9 +88,9 @@
       TYPES_DICT[object.offer.type];
 
     mapCardElement.querySelector('.popup__text--time').textContent =
-      'Заезд после: ' +
+      'Заезд после ' +
       object.offer.checkin +
-      ', выезд до' +
+      ', выезд до ' +
       object.offer.checkout;
 
     var features = mapCardElement.querySelector('.popup__features');
