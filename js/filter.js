@@ -54,16 +54,16 @@
     return true;
   };
 
-  var filterData = function (data, filterKey) {
+  var filterData = function (data) {
     var result = data;
 
     return result
-      .filter(filterByType)
-      .filter(filterByRoomsNumber)
-      .filter(filterByGuestsNumber)
-      .filter(filterByPrice)
-      .filter(filterByFeatures)
-      .slice(0, MAX_VISIBLE_OFFERS);
+        .filter(filterByType)
+        .filter(filterByRoomsNumber)
+        .filter(filterByGuestsNumber)
+        .filter(filterByPrice)
+        .filter(filterByFeatures)
+        .slice(0, MAX_VISIBLE_OFFERS);
   };
 
   var render = function () {

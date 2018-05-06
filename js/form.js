@@ -23,7 +23,6 @@
   var capacitySelect = adForm.elements.namedItem('capacity');
   var inputAddress = adForm.elements.namedItem('address');
   var fieldsets = adForm.querySelectorAll('fieldset');
-  var submitButton = adForm.querySelector('.ad-form__submit');
   var resetButton = adForm.querySelector('.ad-form__reset');
 
   var onResetClick = function (e) {
@@ -62,7 +61,7 @@
     timeInInpun.value = e.target.value;
   };
 
-  var onSuccessSubmit = function (e) {
+  var onSuccessSubmit = function () {
     var successElement = document.querySelector('.success');
 
     successElement.classList.remove('hidden');

@@ -1,4 +1,4 @@
-'use strist';
+'use strict';
 
 (function () {
   var ESC_KEY_CODE = 27;
@@ -61,8 +61,8 @@
 
   var createMapCard = function (object) {
     var mapCardElement = template.content
-      .querySelector('.map__card')
-      .cloneNode(true);
+        .querySelector('.map__card')
+        .cloneNode(true);
 
     mapCardElement.querySelector('.popup__title').textContent =
       object.offer.title;
@@ -160,8 +160,8 @@
 
     mapCardElements = document.querySelectorAll('.map__card');
 
-    for (var k = 0; k < mapCardElements.length; k++) {
-      mapCardElements[k].addEventListener('click', onMapCardClick);
+    for (var l = 0; l < mapCardElements.length; l++) {
+      mapCardElements[l].addEventListener('click', onMapCardClick);
     }
   };
 
