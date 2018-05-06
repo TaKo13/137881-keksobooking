@@ -1,8 +1,7 @@
 'use strist';
 
-(function() {
+(function () {
   var ESC_KEY_CODE = 27;
-  var ENTER_KEY_CODE = 13;
 
   var TYPES_DICT = {
     palace: 'Дворец',
@@ -13,7 +12,7 @@
 
   var template = document.querySelector('template');
 
-  var getPluralForm = function(number, one, two, five) {
+  var getPluralForm = function (number, one, two, five) {
     var n = Math.abs(number) % 100;
 
     if (n >= 5 && n <= 20) {
@@ -33,7 +32,7 @@
     return five;
   };
 
-  var createFeatures = function(features, featuresContainer) {
+  var createFeatures = function (features, featuresContainer) {
     var feature = featuresContainer.querySelector('.popup__feature');
 
     feature.classList.remove('popup__feature--wifi');
@@ -48,7 +47,7 @@
     }
   };
 
-  var createPhotos = function(photos, photosContainer) {
+  var createPhotos = function (photos, photosContainer) {
     var img = photosContainer.querySelector('.popup__photo');
 
     for (var i = 0; i < photos.length; i++) {
@@ -60,8 +59,7 @@
     photosContainer.removeChild(img);
   };
 
-  // Создаются карточки , далее циклом заполнить
-  var createMapCard = function(object) {
+  var createMapCard = function (object) {
     var mapCardElement = template.content
       .querySelector('.map__card')
       .cloneNode(true);
@@ -109,7 +107,7 @@
   };
   var mapCardElements = document.querySelectorAll('.map__card');
 
-  var removeMapCards = function() {
+  var removeMapCards = function () {
     if (!mapCardElements) {
       return;
     }
@@ -119,7 +117,7 @@
     }
   };
 
-  var hideAllMapCards = function() {
+  var hideAllMapCards = function () {
     if (!mapCardElements) {
       return;
     }
@@ -129,32 +127,26 @@
     }
   };
 
-  var onMapCardClick = function(e) {
+  var onMapCardClick = function (e) {
     if (e.target.classList.contains('popup__close')) {
       e.target.parentElement.classList.add('hidden');
     }
   };
 
-  var onEscKeyDown = function(e) {
+  var onEscKeyDown = function (e) {
     if (e.keyCode === ESC_KEY_CODE) {
       document.removeEventListener('keydown', onEscKeyDown);
       hideAllMapCards();
     }
   };
 
-  var showCard = function(i) {
+  var showCard = function (i) {
+    hideAllMapCards();
     mapCardElements[i].classList.remove('hidden');
     document.addEventListener('keydown', onEscKeyDown);
   };
 
-  var onEnterKeyDown = function(e, index) {
-    if (e.keyCode === ENTER_KEY_CODE) {
-      showCard(index);
-    }
-  };
-
-  // Заполняются карточки, вставка на страницу в блок map
-  var insertCardElements = function(objects) {
+  var insertCardElements = function (objects) {
     removeMapCards();
 
     for (var k = 0; k < objects.length; k++) {
@@ -175,8 +167,6 @@
 
   window.card = {
     showCard: showCard,
-    showMapCardOnEnter: onEnterKeyDown,
-    hideAllMapCards: hideAllMapCards,
     removeMapCards: removeMapCards,
     insertCardElements: insertCardElements
   };

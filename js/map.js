@@ -1,13 +1,13 @@
 'use strict';
 
-(function() {
+(function () {
   var PIN_MIN_Y_VALUE = 150;
   var PIN_MAX_Y_VALUE = 500;
 
   var mapPinMainElement = document.querySelector('.map__pin--main');
   var mapPinsContainer = document.querySelector('.map__pins');
 
-  var moveMainPinToCenter = function() {
+  var moveMainPinToCenter = function () {
     mapPinMainElement.style.left =
       mapPinsContainer.clientWidth / 2 -
       mapPinMainElement.clientWidth / 2 +
@@ -16,7 +16,7 @@
       mapPinsContainer.clientHeight / 2 - mapPinMainElement.clientHeight + 'px';
   };
 
-  var getPinPosition = function(pin) {
+  var getPinPosition = function (pin) {
     var x = Math.floor(parseInt(pin.style.left, 10) + pin.clientWidth / 2);
     var y = Math.floor(parseInt(pin.style.top, 10) + pin.clientHeight);
 
@@ -28,15 +28,15 @@
 
   var isMapActive = false;
 
-  var activate = function() {
+  var activate = function () {
     isMapActive = true;
     document.querySelector('.map').classList.remove('map--faded');
     window.form.enableForm();
 
-    window.getData(onGetDataSuccess, onGetDataError);
+    window.backend.getData(onGetDataSuccess, onGetDataError);
   };
 
-  var deactivate = function() {
+  var deactivate = function () {
     isMapActive = false;
     document.querySelector('.map').classList.add('map--faded');
     window.form.disableForm();
@@ -47,10 +47,10 @@
     window.form.fillInputCoordinates(getPinPosition(mapPinMainElement));
   };
 
-  var start = function() {
+  var start = function () {
     deactivate();
 
-    var onMainPinMousedown = function(e) {
+    var onMainPinMousedown = function (e) {
       e.preventDefault();
 
       var startCoords = {
@@ -67,7 +67,7 @@
         height: mapPinMainElement.clientHeight
       };
 
-      var onMainPinMousemove = function(mvE) {
+      var onMainPinMousemove = function (mvE) {
         mvE.preventDefault();
 
         var shift = {
@@ -116,7 +116,7 @@
         window.form.fillInputCoordinates(pinTipCoordinates);
       };
 
-      var onMainPinMouseup = function(upE) {
+      var onMainPinMouseup = function (upE) {
         upE.preventDefault();
         if (!isMapActive) {
           activate();
@@ -133,11 +133,11 @@
     mapPinMainElement.addEventListener('mousedown', onMainPinMousedown);
   };
 
-  var onGetDataError = function(errorMessage) {
+  var onGetDataError = function (errorMessage) {
     window.showErrorMessage(errorMessage);
   };
 
-  var onGetDataSuccess = function(response) {
+  var onGetDataSuccess = function (response) {
     window.data = response;
     window.filter.render();
   };
