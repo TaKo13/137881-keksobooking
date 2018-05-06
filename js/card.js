@@ -1,6 +1,9 @@
 'use strist';
 
 (function() {
+  var ESC_KEY_CODE = 27;
+  var ENTER_KEY_CODE = 13;
+
   var TYPES_DICT = {
     palace: 'Дворец',
     flat: 'Квартира',
@@ -9,6 +12,26 @@
   };
 
   var template = document.querySelector('template');
+
+  var getPluralForm = function(number, one, two, five) {
+    var n = Math.abs(number) % 100;
+
+    if (n >= 5 && n <= 20) {
+      return five;
+    }
+
+    n %= 10;
+
+    if (n === 1) {
+      return one;
+    }
+
+    if (n >= 2 && n <= 4) {
+      return two;
+    }
+
+    return five;
+  };
 
   var createFeatures = function(features, featuresContainer) {
     var feature = featuresContainer.querySelector('.popup__feature');
@@ -49,6 +72,15 @@
     mapCardElement.querySelector('.popup__text--address').textContent =
       object.offer.address;
 
+    mapCardElement.querySelector('.popup__text--capacity').textContent =
+      object.offer.rooms +
+      ' ' +
+      getPluralForm(object.offer.rooms, 'комната', 'команты', 'команат') +
+      ' для ' +
+      object.offer.guests +
+      ' ' +
+      getPluralForm(object.offer.guests, 'гостя', 'гостей', 'гостей');
+
     mapCardElement.querySelector('.popup__text--price').textContent =
       object.offer.price + ' ₽/ночь';
 
@@ -56,9 +88,9 @@
       TYPES_DICT[object.offer.type];
 
     mapCardElement.querySelector('.popup__text--time').textContent =
-      'Заезд после: ' +
+      'Заезд после ' +
       object.offer.checkin +
-      ', выезд до' +
+      ', выезд до ' +
       object.offer.checkout;
 
     var features = mapCardElement.querySelector('.popup__features');
@@ -75,9 +107,56 @@
 
     return mapCardElement;
   };
+  var mapCardElements = document.querySelectorAll('.map__card');
+
+  var removeMapCards = function() {
+    if (!mapCardElements) {
+      return;
+    }
+
+    for (var i = 0; i < mapCardElements.length; i++) {
+      mapCardElements[i].remove();
+    }
+  };
+
+  var hideAllMapCards = function() {
+    if (!mapCardElements) {
+      return;
+    }
+
+    for (var i = 0; i < mapCardElements.length; i++) {
+      mapCardElements[i].classList.add('hidden');
+    }
+  };
+
+  var onMapCardClick = function(e) {
+    if (e.target.classList.contains('popup__close')) {
+      e.target.parentElement.classList.add('hidden');
+    }
+  };
+
+  var onEscKeyDown = function(e) {
+    if (e.keyCode === ESC_KEY_CODE) {
+      document.removeEventListener('keydown', onEscKeyDown);
+      hideAllMapCards();
+    }
+  };
+
+  var showCard = function(i) {
+    mapCardElements[i].classList.remove('hidden');
+    document.addEventListener('keydown', onEscKeyDown);
+  };
+
+  var onEnterKeyDown = function(e, index) {
+    if (e.keyCode === ENTER_KEY_CODE) {
+      showCard(index);
+    }
+  };
 
   // Заполняются карточки, вставка на страницу в блок map
-  window.insertCardElements = function(objects) {
+  var insertCardElements = function(objects) {
+    removeMapCards();
+
     for (var k = 0; k < objects.length; k++) {
       var fragment = document.createDocumentFragment();
       var map = document.querySelector('.map');
@@ -86,5 +165,19 @@
       fragment.appendChild(createMapCard(objects[k]));
       map.insertBefore(fragment, child);
     }
+
+    mapCardElements = document.querySelectorAll('.map__card');
+
+    for (var k = 0; k < mapCardElements.length; k++) {
+      mapCardElements[k].addEventListener('click', onMapCardClick);
+    }
+  };
+
+  window.card = {
+    showCard: showCard,
+    showMapCardOnEnter: onEnterKeyDown,
+    hideAllMapCards: hideAllMapCards,
+    removeMapCards: removeMapCards,
+    insertCardElements: insertCardElements
   };
 })();

@@ -1,9 +1,6 @@
 'use strict';
 
 (function() {
-  var ESC_KEY_CODE = 27;
-  var ENTER_KEY_CODE = 13;
-
   var PIN_MIN_Y_VALUE = 150;
   var PIN_MAX_Y_VALUE = 500;
 
@@ -29,68 +26,25 @@
     };
   };
 
-  var mapCardElements;
-  var mapPinElements;
-
-  var removeMapCards = function() {
-    if (!mapCardElements) {
-      return;
-    }
-
-    for (var i = 0; i < mapCardElements.length; i++) {
-      mapCardElements[i].remove();
-    }
-  };
-
-  var hideAllMapCards = function() {
-    if (!mapCardElements) {
-      return;
-    }
-
-    for (var i = 0; i < mapCardElements.length; i++) {
-      mapCardElements[i].classList.add('hidden');
-    }
-  };
-
-  var showPins = function() {
-    if (!mapPinElements) {
-      return;
-    }
-
-    for (var i = 1; i < mapPinElements.length; i++) {
-      mapPinElements[i].classList.remove('hidden');
-    }
-  };
-
-  var removePins = function() {
-    if (!mapPinElements) {
-      return;
-    }
-
-    for (var i = 1; i < mapPinElements.length; i++) {
-      mapPinElements[i].remove();
-    }
-  };
-
-  var isActive = false;
+  var isMapActive = false;
 
   var activate = function() {
-    isActive = true;
+    isMapActive = true;
     document.querySelector('.map').classList.remove('map--faded');
-    window.enableForm();
+    window.form.enableForm();
 
     window.getData(onGetDataSuccess, onGetDataError);
   };
 
   var deactivate = function() {
-    isActive = false;
+    isMapActive = false;
     document.querySelector('.map').classList.add('map--faded');
-    window.disableForm();
+    window.form.disableForm();
 
     moveMainPinToCenter();
-    removePins();
-    removeMapCards();
-    window.fillInputCoordinates(getPinPosition(mapPinMainElement));
+    window.pin.removePins();
+    window.card.removeMapCards();
+    window.form.fillInputCoordinates(getPinPosition(mapPinMainElement));
   };
 
   var start = function() {
@@ -159,12 +113,12 @@
           y: getPinPosition(mapPinMainElement).y
         };
 
-        window.fillInputCoordinates(pinTipCoordinates);
+        window.form.fillInputCoordinates(pinTipCoordinates);
       };
 
       var onMainPinMouseup = function(upE) {
         upE.preventDefault();
-        if (!isActive) {
+        if (!isMapActive) {
           activate();
         }
 
@@ -183,57 +137,13 @@
     window.showErrorMessage(errorMessage);
   };
 
-  var onGetDataSuccess = function(reponse) {
-    window.insertCardElements(reponse);
-    window.insertMapPinElements(reponse);
-
-    mapPinElements = document.querySelectorAll('.map__pin');
-    showPins();
-
-    var onMapCardClick = function(e) {
-      if (e.target.classList.contains('popup__close')) {
-        e.target.parentElement.classList.add('hidden');
-      }
-    };
-
-    mapCardElements = document.querySelectorAll('.map__card');
-
-    for (var k = 0; k < mapCardElements.length; k++) {
-      mapCardElements[k].addEventListener('click', onMapCardClick);
-    }
-
-    var onEscKeyDown = function(e) {
-      if (e.keyCode === ESC_KEY_CODE) {
-        document.removeEventListener('keydown', onEscKeyDown);
-        hideAllMapCards();
-      }
-    };
-
-    var showCard = function(i) {
-      mapCardElements[i].classList.remove('hidden');
-      document.addEventListener('keydown', onEscKeyDown);
-    };
-
-    var onEnterKeyDown = function(e, index) {
-      if (e.keyCode === ENTER_KEY_CODE) {
-        showCard(index);
-      }
-    };
-
-    // 0 - главная метка
-    // Показываем нужную карточку по клику на пин
-    for (var j = 1; j < mapPinElements.length; j++) {
-      (function(index) {
-        mapPinElements[j].addEventListener('keydown', function(e) {
-          onEnterKeyDown(e, index);
-        });
-        mapPinElements[j].addEventListener('click', function() {
-          hideAllMapCards();
-          showCard(index);
-        });
-      })(j - 1);
-    }
+  var onGetDataSuccess = function(response) {
+    window.data = response;
+    window.filter.render();
   };
   start();
-  window.deactivate = deactivate;
+
+  window.map = {
+    deactivate: deactivate
+  };
 })();
