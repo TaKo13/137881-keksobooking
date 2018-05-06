@@ -147,16 +147,17 @@
   };
 
   var insertCardElements = function (objects) {
+    var fragment = document.createDocumentFragment();
+    var map = document.querySelector('.map');
+    var child = map.querySelector('.map__filters-container');
+
     removeMapCards();
 
     for (var k = 0; k < objects.length; k++) {
-      var fragment = document.createDocumentFragment();
-      var map = document.querySelector('.map');
-      var child = map.querySelector('.map__filters-container');
-
       fragment.appendChild(createMapCard(objects[k]));
-      map.insertBefore(fragment, child);
     }
+
+    map.insertBefore(fragment, child);
 
     mapCardElements = document.querySelectorAll('.map__card');
 
