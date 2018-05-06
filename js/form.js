@@ -1,6 +1,6 @@
 'use strict';
 
-(function() {
+(function () {
   var ROOMS_TO_CAPACITY = {
     '1': [0, 1, 3],
     '2': [0, 3],
@@ -26,15 +26,14 @@
   var submitButton = adForm.querySelector('.ad-form__submit');
   var resetButton = adForm.querySelector('.ad-form__reset');
 
-  var onResetClick = function(e) {
+  var onResetClick = function (e) {
     e.preventDefault();
 
     adForm.reset();
     window.map.deactivate();
   };
 
-  // Поле «Кол-во комнат» синхронизировано с полем «Кол-во мест»
-  var onRoomSelectChange = function(e) {
+  var onRoomSelectChange = function (e) {
     var roomsNumber = e.target.value;
     var indexesToDisable = ROOMS_TO_CAPACITY[roomsNumber];
 
@@ -47,30 +46,28 @@
     }
   };
 
-  // Меняем значение плейсхолдера и мин.цены
-  var changePriceInput = function(price) {
+  var changePriceInput = function (price) {
     housingPriceInput.setAttribute('placeholder', price);
     housingPriceInput.setAttribute('min', price);
   };
 
-  var onHousingTypeChange = function(e) {
+  var onHousingTypeChange = function (e) {
     changePriceInput(TYPES_MIN_PRICES[e.target.value]);
   };
 
-  // Синхронизируем время заезда/выезда
-  var onTimeInChange = function(e) {
+  var onTimeInChange = function (e) {
     timeOutInpun.value = e.target.value;
   };
-  var onTimeOutChange = function(e) {
+  var onTimeOutChange = function (e) {
     timeInInpun.value = e.target.value;
   };
 
-  var onSuccessSubmit = function(e) {
+  var onSuccessSubmit = function (e) {
     var successElement = document.querySelector('.success');
 
     successElement.classList.remove('hidden');
 
-    setTimeout(function() {
+    setTimeout(function () {
       successElement.classList.add('hidden');
     }, 2000);
 
@@ -78,13 +75,13 @@
     window.map.deactivate();
   };
 
-  var onErrorSubmit = function(errorMessage) {
+  var onErrorSubmit = function (errorMessage) {
     window.showErrorMessage(errorMessage);
   };
 
-  var onFormSubmit = function(e) {
+  var onFormSubmit = function (e) {
     e.preventDefault();
-    window.postData(new FormData(adForm), onSuccessSubmit, onErrorSubmit);
+    window.backend.postData(new FormData(adForm), onSuccessSubmit, onErrorSubmit);
   };
 
   roomsSelect.addEventListener('change', onRoomSelectChange);
@@ -96,11 +93,11 @@
   adForm.addEventListener('submit', onFormSubmit);
   resetButton.addEventListener('click', onResetClick);
 
-  var fillInputCoordinates = function(coordinates) {
+  var fillInputCoordinates = function (coordinates) {
     inputAddress.value = coordinates.x + ', ' + coordinates.y;
   };
 
-  var disableForm = function() {
+  var disableForm = function () {
     adForm.classList.add('ad-form--disabled');
 
     for (var i = 0; i < fieldsets.length; i++) {
@@ -108,7 +105,7 @@
     }
   };
 
-  var enableForm = function() {
+  var enableForm = function () {
     adForm.classList.remove('ad-form--disabled');
 
     for (var i = 0; i < fieldsets.length; i++) {

@@ -1,8 +1,8 @@
 'use strict';
-(function() {
+(function () {
   var template = document.querySelector('template');
-  // Создается элемент метки
-  var createMapPin = function(locationX, locationY, avatar, title) {
+
+  var createMapPin = function (locationX, locationY, avatar, title) {
     var mapPinElement = template.content
       .querySelector('.map__pin')
       .cloneNode(true);
@@ -15,9 +15,9 @@
     return mapPinElement;
   };
 
-  var mapPinElements = document.querySelectorAll('.map__pin');
+  var mapPinElements = document.querySelectorAll('.map__pin:not(:first-of-type)');
 
-  var removePins = function() {
+  var removePins = function () {
     if (!mapPinElements) {
       return;
     }
@@ -27,7 +27,7 @@
     }
   };
 
-  var insertMapPinElements = function(objects) {
+  var insertMapPinElements = function (objects) {
     removePins();
 
     for (var j = 0; j < objects.length; j++) {
@@ -45,21 +45,13 @@
       document.querySelector('.map__pins').appendChild(fragment);
     }
 
-    mapPinElements = document.querySelectorAll('.map__pin');
+    mapPinElements = document.querySelectorAll('.map__pin:not(:first-of-type)');
 
-    // 0 - главная метка
-    // Показываем нужную карточку по клику на пин
-    for (var j = 1; j < mapPinElements.length; j++) {
-      (function(index) {
-        mapPinElements[j].addEventListener('keydown', function(e) {
-          window.card.showMapCardOnEnter(e, index);
-        });
-        mapPinElements[j].addEventListener('click', function() {
-          window.card.hideAllMapCards();
-          window.card.showCard(index);
-        });
-      })(j - 1);
-    }
+    [].forEach.call(mapPinElements, function (pinElement, index) {
+      pinElement.addEventListener('click', function () {
+        window.card.showCard(index);
+      });
+    })
   };
 
   window.pin = {
