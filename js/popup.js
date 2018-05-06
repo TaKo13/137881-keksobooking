@@ -1,7 +1,7 @@
-'use srtict';
+'use strict';
 
-(function() {
-  window.showErrorMessage = function(errorMessage) {
+(function () {
+  window.showErrorMessage = function (errorMessage) {
     var fade = document.createElement('div');
     var popup = document.createElement('div');
     var okButton = document.createElement('button');
@@ -14,7 +14,7 @@
     popup.appendChild(okButton);
     fade.appendChild(popup);
 
-    var onClickHandler = function(e) {
+    var onClickHandler = function (e) {
       if (e.target === fade || e.target === okButton) {
         document.removeEventListener('click', onClickHandler);
         document.body.removeChild(fade);

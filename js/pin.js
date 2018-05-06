@@ -4,8 +4,8 @@
 
   var createMapPin = function (locationX, locationY, avatar, title) {
     var mapPinElement = template.content
-      .querySelector('.map__pin')
-      .cloneNode(true);
+        .querySelector('.map__pin')
+        .cloneNode(true);
 
     mapPinElement.style =
       'left:' + locationX + 'px;' + 'top:' + locationY + 'px';
@@ -34,12 +34,12 @@
       var fragment = document.createDocumentFragment();
 
       fragment.appendChild(
-        createMapPin(
-          objects[j].location.x,
-          objects[j].location.y,
-          objects[j].author.avatar,
-          objects[j].title
-        )
+          createMapPin(
+              objects[j].location.x,
+              objects[j].location.y,
+              objects[j].author.avatar,
+              objects[j].title
+          )
       );
 
       document.querySelector('.map__pins').appendChild(fragment);
@@ -51,7 +51,7 @@
       pinElement.addEventListener('click', function () {
         window.card.showCard(index);
       });
-    })
+    });
   };
 
   window.pin = {

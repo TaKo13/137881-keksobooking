@@ -57,5 +57,5 @@
   window.backend = {
     getData: getData,
     postData: postData
-  }
+  };
 })();
