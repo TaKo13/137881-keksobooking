@@ -80,7 +80,7 @@
 
   var onFormSubmit = function (e) {
     e.preventDefault();
-    window.backend.postData(new FormData(adForm), onSuccessSubmit, onErrorSubmit);
+    window.backend.postData(onSuccessSubmit, onErrorSubmit, new FormData(adForm));
   };
 
   roomsSelect.addEventListener('change', onRoomSelectChange);

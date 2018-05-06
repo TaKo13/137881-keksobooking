@@ -32,7 +32,10 @@
     if (housingPriceSelect.value === 'low') {
       return item.offer.price < LOWER_BOUNDARY_OF_MID_PRICE;
     } else if (housingPriceSelect.value === 'middle') {
-      return item.offer.price >= LOWER_BOUNDARY_OF_MID_PRICE && item.offer.price < HIGH_BOUNDARY_OF_MID_PRICE;
+      return (
+        item.offer.price >= LOWER_BOUNDARY_OF_MID_PRICE &&
+        item.offer.price < HIGH_BOUNDARY_OF_MID_PRICE
+      );
     } else if (housingPriceSelect.value === 'high') {
       return item.offer.price > HIGH_BOUNDARY_OF_MID_PRICE;
     }
@@ -41,7 +44,9 @@
   };
 
   var filterByFeatures = function (item) {
-    var checkedFeatures = [].filter.call(housingFeaturesInputs, function (element) {
+    var checkedFeatures = [].filter.call(housingFeaturesInputs, function (
+        element
+    ) {
       return element.checked;
     });
 
@@ -55,9 +60,7 @@
   };
 
   var filterData = function (data) {
-    var result = data;
-
-    return result
+    return data
         .filter(filterByType)
         .filter(filterByRoomsNumber)
         .filter(filterByGuestsNumber)

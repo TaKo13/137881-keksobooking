@@ -15,24 +15,24 @@
     return mapPinElement;
   };
 
-  var mapPinElements = document.querySelectorAll('.map__pin:not(:first-of-type)');
+  var mapPinElements;
 
   var removePins = function () {
     if (!mapPinElements) {
       return;
     }
 
-    for (var i = 1; i < mapPinElements.length; i++) {
+    for (var i = 0; i < mapPinElements.length; i++) {
       mapPinElements[i].remove();
     }
   };
 
   var insertMapPinElements = function (objects) {
+    var fragment = document.createDocumentFragment();
+
     removePins();
 
     for (var j = 0; j < objects.length; j++) {
-      var fragment = document.createDocumentFragment();
-
       fragment.appendChild(
           createMapPin(
               objects[j].location.x,
@@ -41,9 +41,9 @@
               objects[j].title
           )
       );
-
-      document.querySelector('.map__pins').appendChild(fragment);
     }
+
+    document.querySelector('.map__pins').appendChild(fragment);
 
     mapPinElements = document.querySelectorAll('.map__pin:not(:first-of-type)');
 
